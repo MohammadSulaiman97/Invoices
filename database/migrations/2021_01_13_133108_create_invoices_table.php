@@ -18,7 +18,7 @@ class CreateInvoicesTable extends Migration
             $table->string('invoice_number');
             $table->date('invoice_Date');
             $table->date('due_Date');
-            $table->string('product');
+            $table->string('product_id');
             $table->unsignedBigInteger('section_id');
             $table->foreign('section_id')->references('id')->on('sections')->onDelete('cascade');
             $table->string('discount');

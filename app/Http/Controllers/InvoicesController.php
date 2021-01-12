@@ -86,11 +86,7 @@ class InvoicesController extends Controller
     {
         //
     }
-/* في هون غيرت انا كانت جي سون انكود باثر*/
 
-// ارفع المشورع على الجت وابعتلي اللينك اشوفها من عندي
-// اوك
-// عم عذبك شكرا كتير
     public function getproducts($id){
         $products = DB::table("products")->where("section_id", $id)->pluck("product_name", "id");
         return json_encode($products);
