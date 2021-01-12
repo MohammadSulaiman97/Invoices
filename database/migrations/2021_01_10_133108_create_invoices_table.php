@@ -19,7 +19,8 @@ class CreateInvoicesTable extends Migration
             $table->date('invoice_Date');
             $table->date('due_Date');
             $table->string('product');
-            $table->string('section');
+            $table->unsignedBigInteger('section_id');
+            $table->foreign('section_id')->references('id')->on('sections')->onDelete('cascade');
             $table->string('discount');
             $table->string('rate_vat');
             $table->decimal('value_vat',8,2);

@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\invoices;
+use App\Models\products;
+use App\Models\sections;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class InvoicesController extends Controller
 {
@@ -24,7 +27,8 @@ class InvoicesController extends Controller
      */
     public function create()
     {
-        //
+        $sections = sections::all();
+        return view('invoices.add_invoice', compact('sections'));
     }
 
     /**
@@ -82,4 +86,14 @@ class InvoicesController extends Controller
     {
         //
     }
+/* في هون غيرت انا كانت جي سون انكود باثر*/
+
+// ارفع المشورع على الجت وابعتلي اللينك اشوفها من عندي
+// اوك
+// عم عذبك شكرا كتير
+    public function getproducts($id){
+        $products = DB::table("products")->where("section_id", $id)->pluck("product_name", "id");
+        return json_encode($products);
+    }
+
 }
