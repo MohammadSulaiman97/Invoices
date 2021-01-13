@@ -51,24 +51,74 @@
 												<th class="border-bottom-0">الاجمالي</th>
 												<th class="border-bottom-0">الحالة</th>
 												<th class="border-bottom-0">ملاحظات</th>
+												<th class="border-bottom-0">العمليات</th>
 											</tr>
 											</thead>
 											<tbody>
-											<tr>
-												<td>1</td>
-												<td>2023</td>
-												<td>2020/04/25</td>
-												<td>2020/04/25</td>
-												<td>لابتوب</td>
-												<td>hp</td>
-												<td>0%</td>
-												<td>10%</td>
-												<td>100</td>
-												<td>200</td>
-												<td>غير مدفوع</td>
-												<td>لم يتم تستيد المبلغ</td>
-											</tr>
+											@foreach($invoices as $invoice)
+												<tr>
+													<td>{{$invoice->id}}</td>
+													<td>{{$invoice->invoice_number}}</td>
+													<td>{{$invoice->invoice_Date}}</td>
+													<td>{{$invoice->due_Date}}</td>
+													<td>
+														<a href="{{ url('InvoicesDetails') }}/{{ $invoice->id }}">{{ $invoice->section->section_name }}</a>
+													</td>
+													<td>{{$invoice->product_id}}</td>
+													<td>{{$invoice->Discount}}</td>
+													<td>{{$invoice->Rate_VAT}}</td>
+													<td>{{$invoice->Value_VAT}}</td>
+													<td>{{$invoice->Total}}</td>
+													<td>
+														@if ($invoice->Value_Status == 1)
+															<span class="text-success">{{ $invoice->Status }}</span>
+														@elseif($invoice->Value_Status == 2)
+															<span class="text-danger">{{ $invoice->Status }}</span>
+														@else
+															<span class="text-warning">{{ $invoice->Status }}</span>
+														@endif
+													</td>
+													<td>{{$invoice->note}}</td>
+													<td>
+														<div class="dropdown">
+															<button aria-expanded="false" aria-haspopup="true"
+																	class="btn ripple btn-primary btn-sm" data-toggle="dropdown"
+																	type="button">العمليات<i class="fas fa-caret-down ml-1"></i></button>
+															<div class="dropdown-menu tx-13">
 
+																	<a class="dropdown-item"
+																	   href=" {{ url('edit_invoice') }}/{{ $invoice->id }}">تعديل الفاتورة</a>
+
+
+																@can('حذف الفاتورة')
+																	<a class="dropdown-item" href="#" data-invoice_id="{{ $invoice->id }}"
+																	   data-toggle="modal" data-target="#delete_invoice"><i
+																				class="text-danger fas fa-trash-alt"></i>&nbsp;&nbsp;حذف الفاتورة</a>
+																@endcan
+
+																@can('تغير حالة الدفع')
+																	<a class="dropdown-item"
+																	   href="{{ URL::route('Status_show', [$invoice->id]) }}"><i
+																				class=" text-success fas fa-money-bill"></i>&nbsp;&nbsp;تغير حالة الدفع</a>
+																@endcan
+
+																@can('ارشفة الفاتورة')
+																	<a class="dropdown-item" href="#" data-invoice_id="{{ $invoice->id }}"
+																	   data-toggle="modal" data-target="#Transfer_invoice"><i
+																				class="text-warning fas fa-exchange-alt"></i>&nbsp;&nbsp;نقل الي الارشيف</a>
+																@endcan
+
+																@can('طباعةالفاتورة')
+																	<a class="dropdown-item" href="Print_invoice/{{ $invoice->id }}"><i
+																				class="text-success fas fa-print"></i>&nbsp;&nbsp;طباعة الفاتورة
+																	</a>
+																@endcan
+															</div>
+														</div>
+
+													</td>
+												</tr>
+											@endforeach
 											</tbody>
 										</table>
 									</div>

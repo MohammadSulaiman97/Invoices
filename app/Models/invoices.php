@@ -9,6 +9,28 @@ class invoices extends Model
 {
     use HasFactory;
 
+   // protected $guarded = [];
+
+    protected $fillable = [
+        'invoice_number',
+        'invoice_Date',
+        'due_Date',
+        'product_id',
+        'section_id',
+        'Amount_collection',
+        'Amount_Commission',
+        'Discount',
+        'Value_VAT',
+        'Rate_VAT',
+        'Total',
+        'Status',
+        'Value_Status',
+        'note',
+        'Payment_Date',
+    ];
+
+    protected $dates = ['deleted_at'];
+
 
     public function section()
     {
