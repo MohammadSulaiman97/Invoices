@@ -10,6 +10,7 @@ use App\Models\sections;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class InvoicesController extends Controller
 {
@@ -113,9 +114,54 @@ class InvoicesController extends Controller
      * @param  \App\Models\invoices  $invoices
      * @return \Illuminate\Http\Response
      */
-    public function show(invoices $invoices)
+    public function show($id)
     {
-        //
+        $invoices = invoices::where('id',$id)->first();
+        return view('invoices.status_update',compact('invoices'));
+    }
+
+    public function Status_Update($id,Request $request){
+        $invoices = invoices::findOrFail($id);
+        if ($request->Status == 'مدفوعة'){
+            $invoices->update([
+                'Value_Status' => 1,
+                'Status' => $request->Status,
+                'Payment_Date' => $request->Payment_Date,
+            ]);
+            invoices_details::create(
+                [
+                    'id_Invoice' => $request->invoice_id,
+                    'invoice_number' =>$request->invoice_number,
+                    'product_id' => $request->product_id,
+                    'section_id' => $request->section_id,
+                    'Value_Status' => 1,
+                    'Status' => $request->Status,
+                    'note' => $request->note,
+                    'Payment_Date' => $request->Payment_Date,
+                    'user' => (Auth::user()->name),
+                ]
+            );
+        }
+        else {
+            $invoices->update([
+                'Value_Status' => 3,
+                'Status' => $request->Status,
+                'Payment_Date' => $request->Payment_Date,
+            ]);
+            invoices_Details::create([
+                'id_Invoice' => $request->invoice_id,
+                'invoice_number' => $request->invoice_number,
+                'product_id' => $request->product_id,
+                'section_id' => $request->section_id,
+                'Status' => $request->Status,
+                'Value_Status' => 3,
+                'note' => $request->note,
+                'Payment_Date' => $request->Payment_Date,
+                'user' => (Auth::user()->name),
+            ]);
+        }
+        session()->flash('Status_Update');
+        return redirect('/invoices');
     }
 
     /**
@@ -165,14 +211,43 @@ class InvoicesController extends Controller
      * @param  \App\Models\invoices  $invoices
      * @return \Illuminate\Http\Response
      */
-    public function destroy(invoices $invoices)
+    public function destroy(Request $request)
     {
-        //
+        $id = $request->invoice_id;
+        $invoices = invoices::where('id',$id)->first();
+        $Details = invoices_attachments::where('invoice_id',$id)->first();
+
+        if(!(empty($Details->invoice_number))){
+           // Storage::disk('public_uploads')->delete($Details->invoice_number.'/'.$Details->file_name);
+            Storage::disk('public_uploads')->deleteDirectory($Details->invoice_number);
+        }
+
+        $invoices->forceDelete();
+        session()->flash('delete_invoice');
+        return redirect('/invoices');
     }
 
     public function getproducts($id){
         $products = DB::table("products")->where("section_id", $id)->pluck("product_name", "id");
         return json_encode($products);
+    }
+
+    public function Invoice_Paid()
+    {
+        $invoices = invoices::where('Value_Status', 1)->get();
+        return view('invoices.invoices_paid',compact('invoices'));
+    }
+
+    public function Invoice_unPaid()
+    {
+        $invoices = invoices::where('Value_Status',2)->get();
+        return view('invoices.invoices_unpaid',compact('invoices'));
+    }
+
+    public function Invoice_Partial()
+    {
+        $invoices = invoices::where('Value_Status',3)->get();
+        return view('invoices.invoices_Partial',compact('invoices'));
     }
 
 }

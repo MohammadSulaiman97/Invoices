@@ -37,9 +37,21 @@ Route::resource('products', ProductsController::class);
 
 Route::resource('InvoiceAttachments', InvoicesAttachmentsController::class);
 
+/* ...................................InvoicesController............................................... */
+
 Route::get('/section/{id}', 'App\Http\Controllers\InvoicesController@getproducts');
 
 Route::get('/edit_invoice/{id}', 'App\Http\Controllers\InvoicesController@edit');
+
+Route::get('/Status_show/{id}', 'App\Http\Controllers\InvoicesController@show')->name('Status_show');
+Route::post('/Status_Update/{id}', 'App\Http\Controllers\InvoicesController@Status_Update')->name('Status_Update');
+
+Route::get('/Invoice_Paid', 'App\Http\Controllers\InvoicesController@Invoice_Paid');
+Route::get('/Invoice_Partial', 'App\Http\Controllers\InvoicesController@Invoice_Partial');
+Route::get('/Invoice_UnPaid', 'App\Http\Controllers\InvoicesController@Invoice_UnPaid');
+
+
+/* .......................................InvoicesDetailsController ........................................... */
 
 Route::get('/InvoicesDetails/{id}', 'App\Http\Controllers\InvoicesDetailsController@edit');
 
