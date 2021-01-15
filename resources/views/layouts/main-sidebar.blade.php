@@ -5,7 +5,7 @@
 				<h2 style="font-style: oblique">برنامج الفواتير</h2>
 			</div>
 			<div class="main-sidemenu">
-				<div class="app-sidebar__user clearfix">
+				<div class="app-sidebar__user clearfix mb-4">
 					<div class="dropdown user-pro-body">
 						<div class="">
 							<img alt="user-img" class="avatar avatar-xl brround" src="{{URL::asset('assets/img/faces/6.jpg')}}"><span class="avatar-status profile-status bg-green"></span>
@@ -17,7 +17,6 @@
 					</div>
 				</div>
 				<ul class="side-menu">
-					<li class="side-item side-item-category" style="font-size: large"> ----------------------- </li>
 					<li class="slide">
 						<a class="side-menu__item" href="{{ url('/' . $page='home') }}"><svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 22 22" ><path d="M0 0h24v24H0V0z" fill="none"/><path d="M5 5h4v6H5zm10 8h4v6h-4zM5 17h4v2H5zM15 5h4v2h-4z" opacity=".3"/><path d="M3 13h8V3H3v10zm2-8h4v6H5V5zm8 16h8V11h-8v10zm2-8h4v6h-4v-6zM13 3v6h8V3h-8zm6 4h-4V5h4v2zM3 21h8v-6H3v6zm2-4h4v2H5v-2z"/></svg><span class="side-menu__label" style="font-size: 20px">الرئيسية</span></a>
 					</li>
@@ -55,10 +54,10 @@
 								<a class="side-menu__item" data-toggle="slide" href="{{ url('/' . $page='#') }}"><svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M13 4H6v16h12V9h-5V4zm3 14H8v-2h8v2zm0-6v2H8v-2h8z" opacity=".3"/><path d="M8 16h8v2H8zm0-4h8v2H8zm6-10H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg><span class="side-menu__label">التقارير</span><i class="angle fe fe-chevron-down"></i></a>
 								<ul class="slide-menu">
 									@can('تقرير الفواتير')
-										<li><a class="slide-item" href="{{ url('/' . $page='alerts') }}">تقارير الفواتير</a></li>
+										<li><a class="slide-item" href="{{ url('/' . $page='invoices_report') }}">تقارير الفواتير</a></li>
 									@endcan
 									@can('تقرير العملاء')
-										<li><a class="slide-item" href="{{ url('/' . $page='avatar') }}">تقارير العملاء</a></li>
+										<li><a class="slide-item" href="{{ url('/' . $page='customers_report') }}">تقارير العملاء</a></li>
 									@endcan
 								</ul>
 							</li>

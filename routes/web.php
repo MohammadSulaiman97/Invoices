@@ -77,6 +77,15 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('users','App\Http\Controllers\UserController');
 });
 
+/* .......................................report ........................................... */
+Route::get('invoices_report', 'App\Http\Controllers\Invoices_Report@index');
+
+Route::post('Search_invoices', 'App\Http\Controllers\Invoices_Report@Search_invoices');
+
+Route::get('customers_report', 'App\Http\Controllers\Customers_Report@index')->name("customers_report");
+
+Route::post('Search_customers', 'App\Http\Controllers\Customers_Report@Search_customers');
+
 /* .......................................AdminController ........................................... */
 
 Route::get('/{page}', [AdminController::class, 'index']);
