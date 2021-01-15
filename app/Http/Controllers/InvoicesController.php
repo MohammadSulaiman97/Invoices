@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\InvoicesExport;
 use App\Models\invoices;
 use App\Models\invoices_attachments;
 use App\Models\invoices_details;
-use App\Models\products;
 use App\Models\sections;
+use App\Models\User;
+use App\Notifications\AddInvoice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class InvoicesController extends Controller
 {
@@ -64,11 +69,11 @@ class InvoicesController extends Controller
             ]
         );
 
-        $id_invoices = invoices::latest()->first()->id;
+        $invoice_id = invoices::latest()->first()->id;
 
         invoices_details::create(
             [
-                'id_Invoice' => $id_invoices,
+                'id_Invoice' => $invoice_id,
                 'invoice_number' =>$request->invoice_number,
                 'product_id' => $request->product_id,
                 'section_id' => $request->section_id,
@@ -84,7 +89,7 @@ class InvoicesController extends Controller
                 'pic' => 'required|mimes:pdf|max:10000'],[
                     'pic.mimes' => 'خطأ : تم حفظ الفاتورة ولم يتم حفظ المرفق لابد ان يكون pdf'
             ]);*/
-            $id_invoices = invoices::latest()->first()->id;
+            $invoice_id = invoices::latest()->first()->id;
             $image = $request->file('pic');
             $file_name = $image->getClientOriginalName();
             $invoice_number = $request->invoice_number;
@@ -94,7 +99,7 @@ class InvoicesController extends Controller
             $attachments->file_name = $file_name;
             $attachments->invoice_number = $invoice_number;
             $attachments->Created_by = (Auth::user()->name);
-            $attachments->invoice_id = $id_invoices;
+            $attachments->invoice_id = $invoice_id;
             $attachments->save();
 
             // move pic
@@ -102,6 +107,9 @@ class InvoicesController extends Controller
             $request->pic->move(public_path('Attachments/' . $invoice_number), $imageName);
 
         }
+
+        $user = User::first();
+        Notification::send($user, new AddInvoice($invoice_id));
 
         session()->flash('Add', 'تم اضافة الفاتورة بنجاح');
         return back();
@@ -217,14 +225,26 @@ class InvoicesController extends Controller
         $invoices = invoices::where('id',$id)->first();
         $Details = invoices_attachments::where('invoice_id',$id)->first();
 
-        if(!(empty($Details->invoice_number))){
-           // Storage::disk('public_uploads')->delete($Details->invoice_number.'/'.$Details->file_name);
-            Storage::disk('public_uploads')->deleteDirectory($Details->invoice_number);
+        $id_page = $request->id_page;
+
+        if ($id_page == 2){
+
+            if(!(empty($Details->invoice_number))){
+                // Storage::disk('public_uploads')->delete($Details->invoice_number.'/'.$Details->file_name);
+                Storage::disk('public_uploads')->deleteDirectory($Details->invoice_number);
+            }
+
+            $invoices->forceDelete();
+            session()->flash('delete_invoice');
+            return redirect('/invoices');
+        }
+        else{
+            $invoices->Delete();
+            session()->flash('archive_invoice');
+            return redirect('/invoices');
         }
 
-        $invoices->forceDelete();
-        session()->flash('delete_invoice');
-        return redirect('/invoices');
+
     }
 
     public function getproducts($id){
@@ -250,4 +270,14 @@ class InvoicesController extends Controller
         return view('invoices.invoices_Partial',compact('invoices'));
     }
 
+    public function Print_invoice($id)
+    {
+        $invoices = invoices::where('id', $id)->first();
+        return view('invoices.Print_invoice',compact('invoices'));
+    }
+
+    public function export()
+    {
+        return Excel::download(new InvoicesExport, 'invoices.xlsx');
+    }
 }

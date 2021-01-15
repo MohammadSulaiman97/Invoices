@@ -6,6 +6,7 @@ use App\Http\Controllers\InvoicesController;
 use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\InvoicesAttachmentsController;
+use App\Http\Controllers\InvoiceAchiveController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -37,6 +38,8 @@ Route::resource('products', ProductsController::class);
 
 Route::resource('InvoiceAttachments', InvoicesAttachmentsController::class);
 
+Route::resource('Archive', InvoiceAchiveController::class);
+
 /* ...................................InvoicesController............................................... */
 
 Route::get('/section/{id}', 'App\Http\Controllers\InvoicesController@getproducts');
@@ -50,6 +53,11 @@ Route::get('/Invoice_Paid', 'App\Http\Controllers\InvoicesController@Invoice_Pai
 Route::get('/Invoice_Partial', 'App\Http\Controllers\InvoicesController@Invoice_Partial');
 Route::get('/Invoice_UnPaid', 'App\Http\Controllers\InvoicesController@Invoice_UnPaid');
 
+Route::get('Print_invoice/{id}','App\Http\Controllers\InvoicesController@Print_invoice');
+
+
+
+Route::get('export_invoices', 'App\Http\Controllers\InvoicesController@export');
 
 /* .......................................InvoicesDetailsController ........................................... */
 
