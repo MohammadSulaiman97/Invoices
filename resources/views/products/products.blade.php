@@ -61,7 +61,9 @@
 		<div class="col-xl-12">
 			<div class="card mg-b-20">
 				<div class="card-header pb-0">
-					<a class="modal-effect btn btn-outline-primary btn-block" data-effect="effect-scale" data-toggle="modal" href="#exampleModal">اضافة منتج</a>
+					@can('اضافة منتج')
+						<a class="modal-effect btn btn-outline-primary btn-block" data-effect="effect-scale" data-toggle="modal" href="#exampleModal">اضافة منتج</a>
+					@endcan
 				</div>
 				<div class="card-body">
 					<div class="table-responsive">
@@ -84,16 +86,18 @@
 									<td>{{$product->section->section_name}}</td>
 									<td>{{$product->description}}</td>
 									<td>
-
+									@can('تعديل منتج')
 										<a class="modal-effect btn btn-sm btn-info" data-effect="effect-scale"
 										   data-product_name="{{ $product->product_name }}" data-pro_id="{{ $product->id }}"
 										   data-section_name="{{ $product->section->section_name }}"
 										   data-description="{{ $product->description }}" data-toggle="modal"
 										   data-target="#edit_Product" title="تعديل"><i class="las la-pen"></i></a>
-
+									@endcan
+									@can('حذف منتج')
 										<a class="modal-effect btn btn-sm btn-danger" data-effect="effect-scale"
 										    data-product_name="{{ $product->product_name }}" data-pro_id="{{ $product->id }}" data-toggle="modal"
 										   data-target="#product_delete" title="حذف"><i class="las la-trash"></i></a>
+									@endcan
 									</td>
 								</tr>
 							@endforeach

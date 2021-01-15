@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InvoicesController;
 use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\InvoicesAttachmentsController;
 use App\Http\Controllers\InvoiceAchiveController;
 use Illuminate\Support\Facades\Auth;
@@ -69,5 +70,13 @@ Route::get('View_file/{invoice_number}/{file_name}', 'App\Http\Controllers\Invoi
 
 Route::post('delete_file', 'App\Http\Controllers\InvoicesDetailsController@destroy')->name('delete_file');
 
+
+/* .......................................permission ........................................... */
+Route::group(['middleware' => ['auth']], function() {
+    Route::resource('roles','App\Http\Controllers\RoleController');
+    Route::resource('users','App\Http\Controllers\UserController');
+});
+
+/* .......................................AdminController ........................................... */
 
 Route::get('/{page}', [AdminController::class, 'index']);
