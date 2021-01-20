@@ -60,6 +60,10 @@ Route::get('Print_invoice/{id}','App\Http\Controllers\InvoicesController@Print_i
 
 Route::get('export_invoices', 'App\Http\Controllers\InvoicesController@export');
 
+
+Route::get('MarkAsRead_all','App\Http\Controllers\InvoicesController@MarkAsRead_all')->name('MarkAsRead_all');
+
+
 /* .......................................InvoicesDetailsController ........................................... */
 
 Route::get('/InvoicesDetails/{id}', 'App\Http\Controllers\InvoicesDetailsController@edit');

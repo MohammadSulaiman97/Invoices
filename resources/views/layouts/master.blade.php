@@ -24,9 +24,16 @@
 			<div class="container-fluid">
 				@yield('page-header')
 				@yield('content')
-				@include('layouts.sidebar')
+
 				@include('layouts.models')
             	@include('layouts.footer')
 				@include('layouts.footer-scripts')	
 	</body>
 </html>
+
+<script>
+    setInterval(function() {
+        $("#notifications_count").load(window.location.href + " #notifications_count");
+        $("#unreadNotifications").load(window.location.href + " #unreadNotifications");
+    }, 5000);
+</script>

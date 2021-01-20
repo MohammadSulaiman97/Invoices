@@ -8,6 +8,7 @@ use App\Models\invoices_attachments;
 use App\Models\invoices_details;
 use App\Models\sections;
 use App\Models\User;
+use App\Notifications\Add_invoice_new;
 use App\Notifications\AddInvoice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -108,8 +109,15 @@ class InvoicesController extends Controller
 
         }
 
-        $user = User::first();
-        Notification::send($user, new AddInvoice($invoice_id));
+        /*$user = User::first();
+        Notification::send($user, new AddInvoice($invoice_id));*/
+
+         /*  بيبعت اشعار ليوزر يلي مسجل دخول
+        $user = User::find(Auth::user()->id);*/
+
+        $user = User::get();
+        $invoices = invoices::latest()->first();
+        Notification::send($user, new Add_invoice_new($invoices));
 
         session()->flash('Add', 'تم اضافة الفاتورة بنجاح');
         return back();
@@ -280,4 +288,19 @@ class InvoicesController extends Controller
     {
         return Excel::download(new InvoicesExport, 'invoices.xlsx');
     }
+
+
+    public function MarkAsRead_all (Request $request)
+    {
+
+        $userUnreadNotification= auth()->user()->unreadNotifications;
+
+        if($userUnreadNotification) {
+            $userUnreadNotification->markAsRead();
+            return back();
+        }
+
+
+    }
+
 }
