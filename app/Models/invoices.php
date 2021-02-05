@@ -41,4 +41,5 @@ class invoices extends Model
         return $this->belongsTo(sections::class);
         // return $this->belongsTo('App\Models\sections');
     }
+
 }
